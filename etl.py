@@ -15,9 +15,9 @@ class ETL:
       df_avg = df_avg_tmp3.withColumn('date', date_format(col('date'), 'yyyy-MM-dd'))
 
       df_avg.show()
-
+      """ Save to S3 Bucket"""
       s3_path = f'{self.s3_path}/avg_daily'
-      df_avg.coalesce(1).write.option("header", "true").mode("overwrite").csv(s3_path)
+      df_avg.coalesce(1).write.option('header', 'true').mode('overwrite').csv(s3_path)
 
   def ticker_most_freq(self):
       df_freq_tmp = self.df.withColumn('frequency', col('close') * col('volume'))
@@ -25,7 +25,7 @@ class ETL:
       df_freq = df_freq_tmp2.withColumn('frequency', col('frequency').cast('long')).limit(1)
 
       df_freq.show()
-
+      """ Save to S3 Bucket"""
       s3_path = f'{self.s3_path}/ticker_most_freq'
       df_freq.coalesce(1).write.option("header", "true").mode("overwrite").csv(s3_path)
 
@@ -36,7 +36,7 @@ class ETL:
       df_sd = df_sd_tmp2.limit(1)
 
       df_sd.show()
-
+      """ Save to S3 Bucket"""
       s3_path = f'{self.s3_path}/ticker_most_volatile'
       df_sd.coalesce(1).write.option("header", "true").mode("overwrite").csv(s3_path)
 
@@ -51,6 +51,6 @@ class ETL:
        withColumnRenamed('date_after_30_days', 'to_date'))
 
       df_month.show()
-
+      """ Save to S3 Bucket"""
       s3_path = f'{self.s3_path}/top_three_returns'
       df_month.coalesce(1).write.option("header", "true").mode("overwrite").csv(s3_path)

@@ -4,16 +4,20 @@ __author__ = 'Tal Ugashi'
 from pyspark.sql import SparkSession
 from pyspark.conf import SparkConf
 from etl import ETL
+import os
+
+aws_access_key_id = os.environ['aws_access_key_id']
+aws_secret_access_key = os.environ['aws_secret_access_key']
 
 conf = (
     SparkConf()
-    .set("spark.jars.packages", "io.delta:delta-core_2.12:2.3.0,org.apache.hadoop:hadoop-aws:3.3.2")
-    .set("spark.sql.catalog.spark_catalog","org.apache.spark.sql.delta.catalog.DeltaCatalog")
-    .set("spark.sql.extensions", "io.delta.sql.DeltaSparkSessionExtension")
-    .set("spark.hadoop.fs.s3a.access.key", 'AKIATUJS4ZI6DMB7KRGA')
-    .set("spark.hadoop.fs.s3a.secret.key", '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')
-    .set("spark.sql.shuffle.partitions", "4") # default is 200 partitions which is too many for local
-    .setMaster("local[*]") # replace the * with your desired number of cores. * for use all.
+    .set('spark.jars.packages', 'io.delta:delta-core_2.12:2.3.0,org.apache.hadoop:hadoop-aws:3.3.2')
+    .set('spark.sql.catalog.spark_catalog', 'org.apache.spark.sql.delta.catalog.DeltaCatalog')
+    .set('spark.sql.extensions', 'io.delta.sql.DeltaSparkSessionExtension')
+    .set('spark.hadoop.fs.s3a.access.key', aws_access_key_id)
+    .set('spark.hadoop.fs.s3a.secret.key', aws_secret_access_key)
+    .set('spark.sql.shuffle.partitions', '4')
+    .setMaster('local[*]')
 )
 
 spark = (SparkSession.builder.appName('ViHomeAssignment').config(conf=conf).getOrCreate())
